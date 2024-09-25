@@ -1,0 +1,13 @@
+﻿global using System;
+global using System.Linq;
+global using System.Threading.Tasks;
+global using Microsoft.EntityFrameworkCore;
+global using MediatR;
+global using System.Text;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Logging;
+global using System.ComponentModel.DataAnnotations;
+global using SlotEase.Infrastructure.Helpers;
+global using Microsoft.AspNetCore.Routing;
+global using System.Text.RegularExpressions;

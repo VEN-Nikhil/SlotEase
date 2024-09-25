@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  Levr.api:
+    image: ${DOCKER_REGISTRY-}Levrapi
+    build:
+      context: .
+      dockerfile: Levr.service/Levr.API/Dockerfile

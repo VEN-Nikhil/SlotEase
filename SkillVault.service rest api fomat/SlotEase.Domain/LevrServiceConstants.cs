@@ -1,0 +1,57 @@
+﻿namespace SlotEase.Domain;
+
+public static class LevrServiceConstants
+{
+    public const string AuthenticationScheme = "Bearer";
+    public const string PermissionRoleChangeEvent = "PermissionRoleChangeEvent";
+    public const string PtsIdFormatText = "PT";
+    public const string RTSIdFormatText = "RT";
+    public const int SERIAL_TYPE_PTS = 1;
+    public const int SERIAL_TYPE_RTS = 2;
+    public const string EXTENSION_RTS = "rts";
+    public const string EXTENSION_PTS = "pts";
+    public const string EXTENSION_TXT = "txt";
+    public const string EXTENSION_XLS = "xls";
+    public const string EXTENSION_XLSX = "xlsx";
+    public const string EXTENSION_CSV = "csv";
+    public const string DATA_TYPE_STRING = "STRING";
+    public const string DATA_TYPE_INT = "INT";
+    public const string DATA_TYPE_DECIMAL = "DECIMAL";
+    public const string DATA_TYPE_DATETIME = "DATETIME";
+    public const string ATTRIBUTE_PAYROLL_CODE = "PAYROLLCODE";
+    public const string ATTRIBUTE_CUSTOMER_ID = "CUSTOMERID";
+    public const string ATTRIBUTE_EMPLOYER_TAX_AMOUNT = "EMPLOYERTAXAMOUNT";
+    public const string ATTRIBUTE_EMPLOYER_LINE_COUNT = "EMPLOYERLINECOUNT";
+    public const string ATTRIBUTE_DOCUMENT_LINE_COUNT = "DOCUMENTLINECOUNT";
+    public const string ATTRIBUTE_DOCUMENT_TOTAL_AMOUNT = "DOCUMENTTOTALAMOUNT";
+    public const string ATTRIBUTE_PROCESSED_DATE = "PROCESSEDDATE";
+    public const string ATTRIBUTE_FILE_TYPE = "FILETYPE";
+    public const string ATTRIBUTE_VERSION = "VERSION";
+    public const string ATTRIBUTE_TAX_LIABILITIES = "TAXLIABILITIES";
+    public const string ATTRIBUTE_COMPANY_SETUP = "COMPANYSETUP";
+    public const string ATTRIBUTE_PAYROLL_DESCRIPTION = "PAYROLLDESCRIPTION";
+    public const string ATTRIBUTE_CHECK_DATE = "CHECKDATE";
+    public const string ATTRIBUTE_COMPANY_STATUS = "COMPANYSTATUS";
+    public const string ATTRIBUTE_COMPANY_NAME = "COMPANYNAME";
+    public const string ATTRIBUTE_SERVICE_LEVEL = "SERVICELEVEL";
+    public const string ATTRIBUTE_FEIN_TYPE = "FEINTYPE";
+    public const string ATTRIBUTE_FEIN = "FEIN";
+    public const string ATTRIBUTE_FILER944 = "FILER944";
+    public const string ATTRIBUTE_EMPLOYER_KIND = "EMPLOYERKIND";
+    public const string ATTRIBUTE_COMPANY_DBA = "COMPANYDBA";
+    public const string ATTRIBUTE_ADDRESS_LINE1 = "ADDRESSLINE1";
+    public const string ATTRIBUTE_ADDRESS_LINE2 = "ADDRESSLINE2";
+    public const string ATTRIBUTE_CITY = "CITY";
+    public const string ATTRIBUTE_STATE_CODE = "STATECODE";
+    public const string ATTRIBUTE_ZIP_CODE = "ZIPCODE";
+    public const string ATTRIBUTE_COUNTRY_CODE = "COUNTRYCODE";
+    public const string ATTRIBUTE_FIRST_NAME = "FIRSTNAME";
+    public const string ATTRIBUTE_MIDDLE_INITIAL = "MIDDLEINITIAL";
+    public const string ATTRIBUTE_LAST_NAME = "LASTNAME";
+    public const string ATTRIBUTE_AREA_CODE = "AREACODE";
+    public const string ATTRIBUTE_TELEPHONE_NUMBER = "TELEPHONENUMBER";
+    public const string ATTRIBUTE_EXTENSION = "EXTENSION";
+    public const string ATTRIBUTE_FAX_AREA_CODE = "FAXAREACODE";
+    public const string ATTRIBUTE_FAX_NUMBER = "FAXNUMBER";
+    public const string ATTRIBUTE_EMAIL_ADDRESS = "EMAILADDRESS";
+}

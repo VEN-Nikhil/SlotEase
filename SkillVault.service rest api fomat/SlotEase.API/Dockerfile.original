@@ -1,0 +1,29 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
+WORKDIR /src
+COPY ["nuget.config", "."]
+COPY ["Peo.EmployerPortal.API/Peo.EmployerPortal.API.csproj", "Peo.EmployerPortal.API/"]
+COPY ["Peo.EmployerPortal.Application/Peo.EmployerPortal.Application.csproj", "Peo.EmployerPortal.Application/"]
+COPY ["Peo.EmployerPortal.Domain/Peo.EmployerPortal.Domain.csproj", "Peo.EmployerPortal.Domain/"]
+COPY ["Peo.EmployerPortal.Infrastructure/Peo.EmployerPortal.Infrastructure.csproj", "Peo.EmployerPortal.Infrastructure/"]
+ARG PAT
+RUN wget -qO- https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | bash
+ENV NUGET_CREDENTIALPROVIDER_SESSIONTOKENCACHE_ENABLED true
+ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS "{\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/Grit-stone/Topline/_packaging/YodaCommon/nuget/v3/index.json\",  \"username\":\"build\", \"password\":\"${PAT}\"}]}"
+RUN dotnet restore "Peo.EmployerPortal.API/Peo.EmployerPortal.API.csproj"
+COPY . .
+WORKDIR "/src/Peo.EmployerPortal.API"
+RUN dotnet build "Peo.EmployerPortal.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Peo.EmployerPortal.API.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Peo.EmployerPortal.API.dll"]
