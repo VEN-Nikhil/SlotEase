@@ -12,8 +12,8 @@ using SlotEase.Infrastructure;
 namespace SlotEase.Infrastructure.Migrations
 {
     [DbContext(typeof(SlotEaseContext))]
-    [Migration("20240923102345_userdetails")]
-    partial class userdetails
+    [Migration("20240925050204_seed")]
+    partial class seed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

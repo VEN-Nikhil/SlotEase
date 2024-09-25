@@ -37,5 +37,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SlotEase.Application\SlotEase.Application.csproj" />
     <ProjectReference Include="..\SlotEase.Domain\SlotEase.Domain.csproj" />
+    <ProjectReference Include="..\SlotEase.Infrastructure\SlotEase.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
