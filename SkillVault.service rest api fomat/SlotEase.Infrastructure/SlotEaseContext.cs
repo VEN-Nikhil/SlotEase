@@ -25,7 +25,7 @@ public class SlotEaseContext : DbContext
     #endregion User
     #region UserDetails      
     public DbSet<UserDetails> UserDetails { get; set; }
-    #endregion User
+    #endregion UserDetails
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
