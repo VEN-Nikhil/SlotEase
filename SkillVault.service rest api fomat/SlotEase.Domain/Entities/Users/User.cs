@@ -12,6 +12,5 @@ public class User : FullAuditedEntity<long>
     public DateTime LastSignIn { get; set; }
     public bool IsActive { get; set; }
     public bool IsVerified { get; set; }
-    public UserDetails UserDetails { get; set; }
 
 }
