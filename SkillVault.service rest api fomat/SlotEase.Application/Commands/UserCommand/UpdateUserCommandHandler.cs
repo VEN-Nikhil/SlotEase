@@ -13,14 +13,14 @@ using System.Threading.Tasks;
 
 namespace SlotEase.Application.Commands.UserCommand
 {
-    public class CreatedUserCommandHandler : IRequestHandler<CreatedUserCommand, bool>
+    public class UpdatedUserCommandHandler : IRequestHandler<UpdatedUserCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUser _user;
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<UserDetails> _userRepository1;
 
-        public CreatedUserCommandHandler(IUnitOfWork unitOfWork, IUser user, IRepository<User, long> userRepository, IRepository<UserDetails> userRepository1)
+        public UpdatedUserCommandHandler(IUnitOfWork unitOfWork, IUser user, IRepository<User, long> userRepository, IRepository<UserDetails> userRepository1)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _user = user ?? throw new ArgumentNullException(nameof(user));
@@ -28,27 +28,29 @@ namespace SlotEase.Application.Commands.UserCommand
             _userRepository1 = userRepository1 ?? throw new ArgumentNullException(nameof(userRepository1));
         }
 
-        public async Task<bool> Handle(CreatedUserCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdatedUserCommand request, CancellationToken cancellationToken)
         {
-            long result = 0;
-            var data = await CheckUserExists(request.UserCreateDto.Email);
+           
+            var data = await CheckUserExists(request.UserCreateDto.Id);
 
-            if (data == null)
+            if (data != null)
             {
                 data = new User
                 {
+                Id= request.UserCreateDto.Id,
                 Email = request.UserCreateDto.Email,
                 Password = request.UserCreateDto.Password,
                 IsDeleted = false,
                 IsActive = true,
                 CreationTime = DateTime.UtcNow,
                 };
-                result = _userRepository.InsertAndGetId(data);
-                var userDetails = await CheckUserDetailsExists(result);
-                if (userDetails == null)
+                  _userRepository.Update(data);
+                var userDetails = await CheckUserDetailsExists(request.UserCreateDto.Id);
+                if (userDetails != null)
                 {
                     userDetails = new UserDetails
                     {
+                            Id = Convert.ToInt16(userDetails.UserId),
                             Email = request.UserCreateDto.Email,
                             FirstName=request.UserCreateDto.Name,
                             PhoneCode=request.UserCreateDto.PhoneCode,
@@ -57,10 +59,10 @@ namespace SlotEase.Application.Commands.UserCommand
                             LastName=request.UserCreateDto.LastName,
                             LastModificationTime = DateTime.UtcNow,
         
-                            UserId = result,
+                            UserId = request.UserCreateDto.Id,
                             CreationTime = DateTime.UtcNow,
                     };
-                    _userRepository1.Insert(userDetails);
+                    _userRepository1.Update(userDetails);
                 }
             }
             _unitOfWork.SaveChanges();
@@ -68,16 +70,18 @@ namespace SlotEase.Application.Commands.UserCommand
             return true;
         }
 
-        private async Task<User> CheckUserExists(string email)
+        private async Task<User> CheckUserExists(int id)
         {
-            return  _userRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
+            return  _userRepository.GetAll().Where(x => x.Id == id).FirstOrDefault();
            
         }
 
         private async Task<UserDetails> CheckUserDetailsExists(long userId)
         {
-            return _userRepository1.GetAll().FirstOrDefault(x => x.Id == userId);
+             
+            return _userRepository1.GetAll().FirstOrDefault(x => x.UserId == userId);
         }
 
+     
     }
 }

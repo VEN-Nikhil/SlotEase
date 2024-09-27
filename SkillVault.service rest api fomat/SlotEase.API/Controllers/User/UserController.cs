@@ -57,12 +57,35 @@ public class UserController( IUser userQueries, IMediator mediator) : Controller
     [AllowAnonymous]
     [HttpPost]
 
-    public async Task<IActionResult> CreateOrUpdate(UserCreateDto UserCreateDto)
+    public async Task<IActionResult> CreateUser(UserCreateDto UserCreateDto)
     {
         var obj_Res = new CreatedUserCommand(UserCreateDto);
         var result = await _mediator.Send(obj_Res);
         return Ok(result);
     }
+
+    [AllowAnonymous]
+    [HttpPost("Update")]
+
+    public async Task<IActionResult> UpdateUser(UserCreateDto UserCreateDto)
+    {
+        var obj_Res = new UpdatedUserCommand(UserCreateDto);
+        var result = await _mediator.Send(obj_Res);
+        return Ok(result);
+    }
+
+
+
+    [AllowAnonymous]
+    [HttpDelete("Delete")]
+
+    public async Task<IActionResult> DeleteUser(long Id)
+    {
+        var obj_Res = new DeletedUserCommand(Id);
+        var result = await _mediator.Send(obj_Res);
+        return Ok(result);
+    }
+
 
 }
 

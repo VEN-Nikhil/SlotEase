@@ -30,7 +30,8 @@ namespace SlotEase.Application.Queries
                             {
                                 Id = user.Id,
                                 Email = userdetails.Email,
-                                Name = userdetails.FirstName
+                                Password = userdetails.Password,
+                              
                             }).ToList();
 
 
@@ -56,7 +57,9 @@ namespace SlotEase.Application.Queries
                                                 {
                                                     Id = user.Id,
                                                     Email = user.Email,
-                                                   // Name = user.FirstName,
+                                                    Password = user.Password,
+                                             
+
                                                 })
                                                 .FirstOrDefaultAsync();
 
