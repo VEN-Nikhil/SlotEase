@@ -1,5 +1,6 @@
 ﻿
 
+using SlotEase.Application.Commands.UserCommand;
 using SlotEase.Application.DTO.Security;
 using SlotEase.Application.DTO.User;
 using SlotEase.Application.Interfaces.Security;
@@ -13,10 +14,11 @@ namespace SlotEase.API.Controllers;
 [Route(("api/v1.0/[controller]"))]
 [ApiController]
 [Authorize]
-public class UserController( IUser userQueries) : ControllerBase
+public class UserController( IUser userQueries, IMediator mediator) : ControllerBase
 {
 
     private readonly IUser _userQueries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
+    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     [AllowAnonymous]
     [HttpPost]
     [Route("Users")]
@@ -52,8 +54,18 @@ public class UserController( IUser userQueries) : ControllerBase
             return StatusCode(500, "An error occurred while retrieving the user.");
         }
     }
+    [AllowAnonymous]
+    [HttpPost]
+
+    public async Task<IActionResult> CreateOrUpdate(UserCreateDto UserCreateDto)
+    {
+        var obj_Res = new CreatedUserCommand(UserCreateDto);
+        var result = await _mediator.Send(obj_Res);
+        return Ok(result);
+    }
 
 }
+
 
 
 
