@@ -18,14 +18,14 @@ namespace SlotEase.Application.Commands.UserCommand
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUser _user;
         private readonly IRepository<User, long> _userRepository;
-        private readonly IRepository<UserDetails> _userRepository1;
+        private readonly IRepository<UserDetails> _userDetailsRepository;
 
-        public DeletedUserCommandHandler(IUnitOfWork unitOfWork, IUser user, IRepository<User, long> userRepository, IRepository<UserDetails> userRepository1)
+        public DeletedUserCommandHandler(IUnitOfWork unitOfWork, IUser user, IRepository<User, long> userRepository, IRepository<UserDetails> userDetailsRepository)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _user = user ?? throw new ArgumentNullException(nameof(user));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _userRepository1 = userRepository1 ?? throw new ArgumentNullException(nameof(userRepository1));
+            _userDetailsRepository = userDetailsRepository ?? throw new ArgumentNullException(nameof(userDetailsRepository));
         }
 
         public async Task<bool> Handle(DeletedUserCommand request, CancellationToken cancellationToken)
@@ -53,7 +53,7 @@ namespace SlotEase.Application.Commands.UserCommand
                         IsDeleted=userDetails.IsDeleted,
                        
                     };
-                    _userRepository1.Update(userDetails);
+                    _userDetailsRepository.Update(userDetails);
                 }
             }
             _unitOfWork.SaveChanges();
@@ -70,7 +70,7 @@ namespace SlotEase.Application.Commands.UserCommand
         private async Task<UserDetails> CheckUserDetailsExists(long userId)
         {
              
-            return _userRepository1.GetAll().FirstOrDefault(x => x.userId == userId);
+            return _userDetailsRepository.GetAll().FirstOrDefault(x => x.userId == userId);
         }
 
      

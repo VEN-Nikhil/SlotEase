@@ -6,11 +6,11 @@ namespace SlotEase.Application.Commands.UserCommand
 {
     public class UpdatedUserCommand : IRequest<bool>
     {
-      public UserCreateDto UserCreateDto { get; set; }
+      public UserUpdateDto UserUpdateDto { get; set; }
 
-        public UpdatedUserCommand(UserCreateDto userCreateDto)
+        public UpdatedUserCommand(UserUpdateDto userUpdateDto)
         {
-          UserCreateDto = userCreateDto;
+            UserUpdateDto = userUpdateDto;
         }
     }
 }
