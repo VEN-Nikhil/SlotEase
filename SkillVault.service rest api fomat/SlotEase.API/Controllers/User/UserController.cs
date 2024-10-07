@@ -85,10 +85,4 @@ public class UserController( IUser userQueries, IMediator mediator) : Controller
         var result = await _mediator.Send(obj_Res);
         return Ok(result);
     }
-
-
 }
-
-
-
-

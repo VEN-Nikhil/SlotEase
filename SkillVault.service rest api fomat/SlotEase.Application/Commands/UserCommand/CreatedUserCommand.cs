@@ -7,9 +7,7 @@ namespace SlotEase.Application.Commands.UserCommand
     // Sample command
     public class CreatedUserCommand : IRequest<bool>
     {
-
       public UserCreateDto UserCreateDto { get; set; }
-
         public CreatedUserCommand(UserCreateDto userCreateDto)
         {
           UserCreateDto = userCreateDto;

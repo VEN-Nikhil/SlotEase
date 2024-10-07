@@ -39,9 +39,18 @@ namespace SlotEase.Application.Commands.UserCommand
                 {
                 Email = request.UserCreateDto.Email,
                 Password = request.UserCreateDto.Password,
+                FirstName= request.UserCreateDto.FirstName,
+                LastName= request.UserCreateDto.Lastname,
+                Gender= request.UserCreateDto.Gender,
+                CreatorUserId=0,
                 IsDeleted = false,
                 IsActive = true,
                 CreationTime = DateTime.UtcNow,
+                LastModificationTime= DateTime.UtcNow,
+                IsVerified = false,
+                LastModifierUserId=0,
+                
+               
                 };
                 result = _userRepository.InsertAndGetId(data);
                 var userDetails = await CheckUserDetailsExists(result);
@@ -49,18 +58,27 @@ namespace SlotEase.Application.Commands.UserCommand
                 {
                     userDetails = new UserDetails
                     {
-                            Email = request.UserCreateDto.Email,
-                            FirstName=request.UserCreateDto.Name,
-                            PhoneCode=request.UserCreateDto.PhoneCode,
-                            PhoneNumber=request.UserCreateDto.PhoneNumber,
-                            Gender=request.UserCreateDto.Gender,
-                            LastName=request.UserCreateDto.LastName,
-                            LastModificationTime = DateTime.UtcNow,
-        
-                            UserId = result,
-                            CreationTime = DateTime.UtcNow,
+                        userId =   result,
+                        LastModificationTime = DateTime.UtcNow,
+                        CreationTime = DateTime.UtcNow,
+
+                        companyId =1,
+                        phoneNumber = request.UserCreateDto.PhoneNumber.ToString() ,
+
+                        CreatorUserId = 0,
+                        IsDeleted = false,
                     };
+
                     _userRepository1.Insert(userDetails);
+
+                    /*
+                         UserDetails userDet = new UserDetails();
+                        userDet.LastModificationTime= DateTime.UtcNow;
+                        userDet.CreationTime= DateTime.UtcNow;
+                        userDet.phoneNumber = request.UserCreateDto.PhoneNumber.ToString();
+                        _userRepository1.Insert(userDet);
+                     
+                     */
                 }
             }
             _unitOfWork.SaveChanges();

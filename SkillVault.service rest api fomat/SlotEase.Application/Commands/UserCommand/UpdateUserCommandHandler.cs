@@ -5,9 +5,7 @@ using SlotEase.Domain.Entities.Users;
 using SlotEase.Domain.Interfaces;
 using SlotEase.Infrastructure.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,70 +16,58 @@ namespace SlotEase.Application.Commands.UserCommand
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUser _user;
         private readonly IRepository<User, long> _userRepository;
-        private readonly IRepository<UserDetails> _userRepository1;
+        private readonly IRepository<UserDetails> _userDetailsRepository;
 
-        public UpdatedUserCommandHandler(IUnitOfWork unitOfWork, IUser user, IRepository<User, long> userRepository, IRepository<UserDetails> userRepository1)
+        public UpdatedUserCommandHandler(IUnitOfWork unitOfWork, IUser user, IRepository<User, long> userRepository, IRepository<UserDetails> userDetailsRepository)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _user = user ?? throw new ArgumentNullException(nameof(user));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _userRepository1 = userRepository1 ?? throw new ArgumentNullException(nameof(userRepository1));
+            _userDetailsRepository = userDetailsRepository ?? throw new ArgumentNullException(nameof(userDetailsRepository));
         }
 
         public async Task<bool> Handle(UpdatedUserCommand request, CancellationToken cancellationToken)
         {
-           
-            var data = await CheckUserExists(request.UserCreateDto.Id);
-
-            if (data != null)
+            // Check if the user exists
+            var user = await CheckUserExists(request.UserCreateDto.Id);
+            if (user == null)
             {
-                data = new User
-                {
-                Id= request.UserCreateDto.Id,
-                Email = request.UserCreateDto.Email,
-                Password = request.UserCreateDto.Password,
-                IsDeleted = false,
-                IsActive = true,
-                CreationTime = DateTime.UtcNow,
-                };
-                  _userRepository.Update(data);
-                var userDetails = await CheckUserDetailsExists(request.UserCreateDto.Id);
-                if (userDetails != null)
-                {
-                    userDetails = new UserDetails
-                    {
-                            Id = Convert.ToInt16(userDetails.UserId),
-                            Email = request.UserCreateDto.Email,
-                            FirstName=request.UserCreateDto.Name,
-                            PhoneCode=request.UserCreateDto.PhoneCode,
-                            PhoneNumber=request.UserCreateDto.PhoneNumber,
-                            Gender=request.UserCreateDto.Gender,
-                            LastName=request.UserCreateDto.LastName,
-                            LastModificationTime = DateTime.UtcNow,
-        
-                            UserId = request.UserCreateDto.Id,
-                            CreationTime = DateTime.UtcNow,
-                    };
-                    _userRepository1.Update(userDetails);
-                }
+                throw new ApplicationException("User not found");
             }
-            _unitOfWork.SaveChanges();
+
+            // Update user fields
+            user.Email = request.UserCreateDto.Email;
+            user.Password = request.UserCreateDto.Password;
+            user.FirstName = request.UserCreateDto.FirstName;
+            user.LastName = request.UserCreateDto.Lastname;
+            user.Gender = request.UserCreateDto.Gender;
+            user.LastModificationTime = DateTime.UtcNow;
+
+            _userRepository.Update(user);
+
+            // Check if user details exist
+            var userDetails = await CheckUserDetailsExists(request.UserCreateDto.Id);
+            if (userDetails != null)
+            {
+                // Update user details
+                userDetails.phoneNumber = request.UserCreateDto.PhoneNumber;
+                userDetails.LastModificationTime = DateTime.UtcNow;
+
+                _userDetailsRepository.Update(userDetails);
+            }
+            
 
             return true;
         }
 
-        private async Task<User> CheckUserExists(int id)
+        private async Task<User> CheckUserExists(long id)
         {
-            return  _userRepository.GetAll().Where(x => x.Id == id).FirstOrDefault();
-           
+            return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         private async Task<UserDetails> CheckUserDetailsExists(long userId)
         {
-             
-            return _userRepository1.GetAll().FirstOrDefault(x => x.UserId == userId);
+            return await _userDetailsRepository.GetAll().FirstOrDefaultAsync(x => x.userId == userId);
         }
-
-     
     }
 }

@@ -24,15 +24,21 @@ namespace SlotEase.Application.Queries
             {
                 var query = (from user in _userRepository.GetAll(false)
                             join userdetails in _userDetailsRepository.GetAll(false)
-                            on user.Id equals userdetails.UserId
-                            where String.IsNullOrEmpty(userRequestDto.email) || userdetails.Email.ToLower().Trim().Contains(userRequestDto.email.ToLower().Trim())
+                            on user.Id equals userdetails.userId
+                            where String.IsNullOrEmpty(userRequestDto.email) || user.Email.Trim().Contains(userRequestDto.email.ToLower().Trim())
                             select new UserDto
                             {
                                 Id = user.Id,
-                                Email = userdetails.Email,
-                                LastName = userdetails.LastName,
-
-                              
+                                Email = user.Email,
+                                FirstName = user.FirstName,
+                                LastName = user.LastName,
+                                Gender = user.Gender,
+                                phoneNumber= userdetails.phoneNumber,
+                                IsActive = user.IsActive,
+                                IsVerified = user.IsVerified,
+                                CreationTime = user.CreationTime,
+                                LastSignIn = user.LastSignIn,
+                        
                             }).ToList();
 
 
@@ -45,32 +51,37 @@ namespace SlotEase.Application.Queries
                 throw new ApplicationException("An error occurred while retrieving the users.", ex);
             }
         }
-
-
-
         public async Task<UserDto> GetSingleUserAsync(int id)
         {
             try
             {
-                var user = await _userRepository.GetAll()
-                                                .Where(e => e.IsActive && e.Id == id)
-                                                .Select(user => new UserDto
-                                                {
-                                                    Id = user.Id,
-                                                    Email = user.Email,
-                                                    Password = user.Password,
-                                             
+                var query = (from user in _userRepository.GetAll(false)
+                             join userdetails in _userDetailsRepository.GetAll(false)
+                             on user.Id equals userdetails.userId
+                             where user.Id == id
+                             select new UserDto
+                             {
+                                 Id = user.Id,
+                                 Email = user.Email,
+                                 FirstName = user.FirstName,
+                                 LastName = user.LastName,
+                                 Gender = user.Gender,
+                                 phoneNumber = userdetails.phoneNumber,
+                                 IsActive = user.IsActive,
+                                 IsVerified = user.IsVerified,
+                                 CreationTime = user.CreationTime,
+                                 LastSignIn = user.LastSignIn
+                             }).FirstOrDefault();
 
-                                                })
-                                                .FirstOrDefaultAsync();
-
-                return user;
+                // Return the user details or null if not found
+                return await Task.FromResult(query);
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("An error occurred while retrieving the user.", ex);
             }
         }
+
 
     }
 }

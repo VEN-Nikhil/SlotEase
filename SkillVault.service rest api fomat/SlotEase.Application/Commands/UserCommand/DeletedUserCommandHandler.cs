@@ -48,7 +48,7 @@ namespace SlotEase.Application.Commands.UserCommand
                 {
                     userDetails = new UserDetails
                     {
-                        Id = Convert.ToInt16(userDetails.UserId),
+                        Id = Convert.ToInt16(userDetails.userId),
                         DeletionTime=DateTime.Now,
                         IsDeleted=userDetails.IsDeleted,
                        
@@ -70,7 +70,7 @@ namespace SlotEase.Application.Commands.UserCommand
         private async Task<UserDetails> CheckUserDetailsExists(long userId)
         {
              
-            return _userRepository1.GetAll().FirstOrDefault(x => x.UserId == userId);
+            return _userRepository1.GetAll().FirstOrDefault(x => x.userId == userId);
         }
 
      
