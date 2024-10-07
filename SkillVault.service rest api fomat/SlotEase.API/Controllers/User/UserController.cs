@@ -67,9 +67,9 @@ public class UserController( IUser userQueries, IMediator mediator) : Controller
     [AllowAnonymous]
     [HttpPost("Update")]
 
-    public async Task<IActionResult> UpdateUser(UserCreateDto UserCreateDto)
+    public async Task<IActionResult> UpdateUser(UserUpdateDto userUpdateDto)
     {
-        var obj_Res = new UpdatedUserCommand(UserCreateDto);
+        var obj_Res = new UpdatedUserCommand(userUpdateDto);
         var result = await _mediator.Send(obj_Res);
         return Ok(result);
     }
