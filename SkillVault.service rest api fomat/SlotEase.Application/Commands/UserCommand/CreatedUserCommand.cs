@@ -13,4 +13,5 @@ namespace SlotEase.Application.Commands.UserCommand
           UserCreateDto = userCreateDto;
         }
     }
+    
 }

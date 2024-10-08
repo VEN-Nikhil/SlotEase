@@ -167,7 +167,7 @@ public class Startup
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Data Maintenance");
+            c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "SlotEase");
         });
     }
 }

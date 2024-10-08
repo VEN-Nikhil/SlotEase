@@ -1,4 +1,5 @@
-﻿using SlotEase.Application.DTO.PickpPoint;
+﻿using SlotEase.Application.Commands.PickupPoint;
+using SlotEase.Application.DTO.PickpPoint;
 using SlotEase.Application.DTO.PickupPoint;
 using SlotEase.Application.Interfaces;
 using System.Collections.Generic;
@@ -51,6 +52,14 @@ namespace SlotEase.API.Controllers.Pickup
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> CreatePickupPoint(PickupPointDto pickupPointDto)
+        {
+            var obj_Res = new CreatedPickupPointCommand(pickupPointDto);
+            var result = await _mediator.Send(obj_Res);
+            return Ok(result);
+        }
 
     }
 }

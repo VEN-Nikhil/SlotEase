@@ -1,15 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SlotEase.Application.DTO.User;
-using SlotEase.Application.Interfaces.User;
+﻿using SlotEase.Application.Interfaces.User;
 using SlotEase.Domain.Entities.Users;
 using SlotEase.Domain.Interfaces;
 using SlotEase.Infrastructure.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace SlotEase.Application.Commands.UserCommand
 {
@@ -37,20 +30,18 @@ namespace SlotEase.Application.Commands.UserCommand
             {
                 data = new User
                 {
-                Email = request.UserCreateDto.Email,
-                Password = request.UserCreateDto.Password,
-                FirstName= request.UserCreateDto.FirstName,
-                LastName= request.UserCreateDto.Lastname,
-                Gender= request.UserCreateDto.Gender,
-                CreatorUserId=0,
-                IsDeleted = false,
-                IsActive = true,
-                CreationTime = DateTime.UtcNow,
-                LastModificationTime= DateTime.UtcNow,
-                IsVerified = false,
-                LastModifierUserId=0,
-                
-               
+                    Email = request.UserCreateDto.Email,
+                    Password = request.UserCreateDto.Password,
+                    FirstName = request.UserCreateDto.FirstName,
+                    LastName = request.UserCreateDto.Lastname,
+                    Gender = request.UserCreateDto.Gender,
+                    CreatorUserId = 0,
+                    IsDeleted = false,
+                    IsActive = true,
+                    CreationTime = DateTime.UtcNow,
+                    LastModificationTime = DateTime.UtcNow,
+                    IsVerified = false,
+                    LastModifierUserId = 0,
                 };
                 result = _userRepository.InsertAndGetId(data);
                 var userDetails = await CheckUserDetailsExists(result);
@@ -58,27 +49,18 @@ namespace SlotEase.Application.Commands.UserCommand
                 {
                     userDetails = new UserDetails
                     {
-                        userId =   result,
+                        userId = result,
                         LastModificationTime = DateTime.UtcNow,
                         CreationTime = DateTime.UtcNow,
 
-                        companyId =1,
-                        phoneNumber = request.UserCreateDto.PhoneNumber.ToString() ,
+                        companyId = 1,
+                        phoneNumber = request.UserCreateDto.PhoneNumber.ToString(),
 
                         CreatorUserId = 0,
                         IsDeleted = false,
                     };
 
                     _userRepository1.Insert(userDetails);
-
-                    /*
-                         UserDetails userDet = new UserDetails();
-                        userDet.LastModificationTime= DateTime.UtcNow;
-                        userDet.CreationTime= DateTime.UtcNow;
-                        userDet.phoneNumber = request.UserCreateDto.PhoneNumber.ToString();
-                        _userRepository1.Insert(userDet);
-                     
-                     */
                 }
             }
             _unitOfWork.SaveChanges();
@@ -88,8 +70,8 @@ namespace SlotEase.Application.Commands.UserCommand
 
         private async Task<User> CheckUserExists(string email)
         {
-            return  _userRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
-           
+            return _userRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
+
         }
 
         private async Task<UserDetails> CheckUserDetailsExists(long userId)

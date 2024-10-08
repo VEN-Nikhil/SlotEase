@@ -46,4 +46,5 @@ namespace SlotEase.Application.DTO.User
         public int? DeleterUserId { get; set; }
         public DateTime? DeletionTime { get; set; }
     }
+    
 }
