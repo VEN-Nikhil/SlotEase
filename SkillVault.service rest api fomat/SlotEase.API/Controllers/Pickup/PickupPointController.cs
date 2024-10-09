@@ -61,5 +61,26 @@ namespace SlotEase.API.Controllers.Pickup
             return Ok(result);
         }
 
+
+        //Update
+        [AllowAnonymous]
+        [HttpPut]
+        public async Task<IActionResult> UpdatePickupPoint(PickupPointDto pickupPointDto)
+        {
+            var obj_Res = new UpdatePickupPointCommand(pickupPointDto);
+            var result = await _mediator.Send(obj_Res);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("Delete")]
+
+        public async Task<IActionResult> DeletePickupPoint(long Id)
+        {
+            var obj_Res = new DeletePickupPointCommand(Id);
+            var result = await _mediator.Send(obj_Res);
+            return Ok(result);
+        }
+
     }
 }
