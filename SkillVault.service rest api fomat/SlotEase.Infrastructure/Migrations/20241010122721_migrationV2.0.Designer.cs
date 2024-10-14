@@ -12,8 +12,8 @@ using SlotEase.Infrastructure;
 namespace SlotEase.Infrastructure.Migrations
 {
     [DbContext(typeof(SlotEaseContext))]
-    [Migration("20241007121131_migrationV1.3")]
-    partial class migrationV13
+    [Migration("20241010122721_migrationV2.0")]
+    partial class migrationV20
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

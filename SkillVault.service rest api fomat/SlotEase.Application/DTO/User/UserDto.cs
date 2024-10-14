@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-namespace SlotEase.Application.DTO.User
+﻿namespace SlotEase.Application.DTO.User
 {
     public class UserDto
     {
@@ -18,6 +11,6 @@ namespace SlotEase.Application.DTO.User
         public bool IsActive { get; set; }
         public bool IsVerified { get; set; }
         public DateTime CreationTime { get; set; }
-        public string phoneNumber {  get; set; }
+        public string phoneNumber { get; set; }
     }
 }

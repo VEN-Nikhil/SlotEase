@@ -1,9 +1,7 @@
 ﻿
 
 using SlotEase.Application.Commands.UserCommand;
-using SlotEase.Application.DTO.Security;
 using SlotEase.Application.DTO.User;
-using SlotEase.Application.Interfaces.Security;
 using SlotEase.Application.Interfaces.User;
 using System.Collections.Generic;
 
@@ -14,7 +12,7 @@ namespace SlotEase.API.Controllers;
 [Route(("api/v1.0/[controller]"))]
 [ApiController]
 [Authorize]
-public class UserController( IUser userQueries, IMediator mediator) : ControllerBase
+public class UserController(IUser userQueries, IMediator mediator) : ControllerBase
 {
 
     private readonly IUser _userQueries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));

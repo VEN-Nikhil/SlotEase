@@ -26,6 +26,7 @@ namespace SlotEase.Application.Commands.UserCommand
             long result = 0;
             var data = await CheckUserExists(request.UserCreateDto.Email);
 
+
             if (data == null)
             {
                 data = new User
@@ -42,6 +43,7 @@ namespace SlotEase.Application.Commands.UserCommand
                     LastModificationTime = DateTime.UtcNow,
                     IsVerified = false,
                     LastModifierUserId = 0,
+                    UserType = (int)request.UserCreateDto.UserType,
                 };
                 result = _userRepository.InsertAndGetId(data);
                 var userDetails = await CheckUserDetailsExists(result);

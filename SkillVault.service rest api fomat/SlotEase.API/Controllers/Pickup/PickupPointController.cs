@@ -15,7 +15,7 @@ namespace SlotEase.API.Controllers.Pickup
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
 
-
+        //Select all With Pagination 
         [AllowAnonymous]
         [HttpPost]
         [Route("PickupPoints")]
@@ -34,7 +34,7 @@ namespace SlotEase.API.Controllers.Pickup
 
 
 
-
+        //Select by ID
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetSinglePickupPoint(int id)
@@ -51,7 +51,7 @@ namespace SlotEase.API.Controllers.Pickup
                 return StatusCode(500, "An error occurred while retrieving the user.");
             }
         }
-
+        //Create
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreatePickupPoint(PickupPointDto pickupPointDto)
@@ -71,7 +71,7 @@ namespace SlotEase.API.Controllers.Pickup
             var result = await _mediator.Send(obj_Res);
             return Ok(result);
         }
-
+        //Delete
         [AllowAnonymous]
         [HttpDelete("Delete")]
 

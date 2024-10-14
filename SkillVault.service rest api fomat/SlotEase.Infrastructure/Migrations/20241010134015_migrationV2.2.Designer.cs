@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SlotEase.Infrastructure;
 
@@ -11,9 +12,11 @@ using SlotEase.Infrastructure;
 namespace SlotEase.Infrastructure.Migrations
 {
     [DbContext(typeof(SlotEaseContext))]
-    partial class SlotEaseContextModelSnapshot : ModelSnapshot
+    [Migration("20241010134015_migrationV2.2")]
+    partial class migrationV22
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,46 +24,6 @@ namespace SlotEase.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("SlotEase.Domain.Entities.Driver.Driver", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("driverId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("vendorId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Drivers");
-                });
 
             modelBuilder.Entity("SlotEase.Domain.Entities.Locations.PickupPoints", b =>
                 {
@@ -174,9 +137,6 @@ namespace SlotEase.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DriverId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -217,8 +177,6 @@ namespace SlotEase.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DriverId");
 
                     b.HasIndex("UserDetailsId");
 
@@ -280,18 +238,9 @@ namespace SlotEase.Infrastructure.Migrations
 
             modelBuilder.Entity("SlotEase.Domain.Entities.Users.User", b =>
                 {
-                    b.HasOne("SlotEase.Domain.Entities.Driver.Driver", null)
-                        .WithMany("Users")
-                        .HasForeignKey("DriverId");
-
                     b.HasOne("SlotEase.Domain.Entities.Users.UserDetails", null)
                         .WithMany("Users")
                         .HasForeignKey("UserDetailsId");
-                });
-
-            modelBuilder.Entity("SlotEase.Domain.Entities.Driver.Driver", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("SlotEase.Domain.Entities.Users.UserDetails", b =>

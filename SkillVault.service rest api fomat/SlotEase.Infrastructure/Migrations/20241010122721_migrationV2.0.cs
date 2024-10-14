@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SlotEase.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class migrationV13 : Migration
+    public partial class migrationV20 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
