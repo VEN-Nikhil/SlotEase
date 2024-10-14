@@ -3,9 +3,9 @@ using SlotEase.Helpers;
 
 namespace SlotEase.Application.Commands;
 
-public class CreateUserCommand : IRequest<ApiResponse<SignUpResponseDto>>
+public class CreatedUserCommand : IRequest<ApiResponse<SignUpResponseDto>>
 {
-    public CreateUserCommand(SignUpDto signUpDto)
+    public CreatedUserCommand(SignUpDto signUpDto)
     {
         this.signUpDto = signUpDto ?? throw new ArgumentNullException(nameof(signUpDto));
 

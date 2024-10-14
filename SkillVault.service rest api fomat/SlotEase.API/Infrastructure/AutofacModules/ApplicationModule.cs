@@ -6,6 +6,10 @@ using SlotEase.Infrastructure.Interfaces;
 using SlotEase.Infrastructure.Repositories;
 using SlotEase.Infrastructure.Services;
 using SlotEase.Application.Queries.Setting;
+using SlotEase.Application.Queries;
+using SlotEase.Application.Interfaces.User;
+using SlotEase.Application.Interfaces.Security;
+using SlotEase.Application.Queries.Security;
 
 namespace SlotEase.API.Infrastructure.AutofacModules;
 
@@ -25,17 +29,35 @@ public class ApplicationModule : Autofac.Module
             .InstancePerLifetimeScope();
 
         // No need to register any more respository since all will be registered using the generic registration below.
-        builder.RegisterGeneric(typeof(BaseRepository<>))
-            .As(typeof(IRepository<>));
+        //builder.RegisterGeneric(typeof(BaseRepository<>))
+        //    .As(typeof(IRepository<>));
 
+        builder.RegisterGeneric(typeof(BaseRepository<>))
+         .As(typeof(IRepository<>));
+
+        builder.RegisterGeneric(typeof(BaseRepository<,>))
+                     .As(typeof(IRepository<,>))
+                     .InstancePerLifetimeScope();
+
+
+        ////
 
         builder.RegisterType<DapperRepository>()
                     .As<IDapperRepository>()
                     .InstancePerLifetimeScope();
 
+        builder.RegisterType<SecurityQueries>()
+           .As<ISecurityQueries>()
+           .InstancePerLifetimeScope();
+
         builder.RegisterType<UserService>()
             .As<IUserService>()
             .InstancePerLifetimeScope();
+        
+        builder.RegisterType<UserQueries>()
+            .As<IUser>()
+            .InstancePerLifetimeScope();
+
 
         builder
             .RegisterAssemblyTypes(typeof(AppConfigurationQueries).GetTypeInfo().Assembly)

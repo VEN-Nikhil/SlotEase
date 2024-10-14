@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using SlotEase.Domain;
+using SlotEase.Domain.Entities.Driver;
+using SlotEase.Domain.Entities.Locations;
 using SlotEase.Domain.Entities.Setting;
 using SlotEase.Domain.Entities.Users;
 using SlotEase.Domain.Extensions;
@@ -25,12 +27,29 @@ public class SlotEaseContext : DbContext
     #endregion User
     #region UserDetails      
     public DbSet<UserDetails> UserDetails { get; set; }
-    #endregion User
+    #endregion UserDetails
+
+    public DbSet<PickupPoints> PickupPoints { get; set; }
+    public DbSet<Driver> Drivers { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyGlobalFilters<IDelete>(e => !e.IsDeleted);
         modelBuilder.Entity<AppConfigurationUI>().HasIndex(u => u.Name).IsUnique();
+        modelBuilder.Entity<PickupPoints>(entity =>
+      {
+          entity.Property(e => e.DistanceFromOffice)
+              .HasPrecision(10, 2); // Specify precision and scale
+
+          entity.Property(e => e.Latitude)
+              .HasPrecision(10, 8); // Specify precision and scale
+
+          entity.Property(e => e.Longitude)
+              .HasPrecision(11, 8); // Specify precision and scale
+      });
+
+
     }
 
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
