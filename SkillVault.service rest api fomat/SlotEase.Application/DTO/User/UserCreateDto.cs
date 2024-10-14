@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SlotEase.API.Constants.ApiResponse;
+using System.ComponentModel.DataAnnotations;
 
 namespace SlotEase.Application.DTO.User
 {
@@ -40,7 +41,9 @@ namespace SlotEase.Application.DTO.User
         public bool IsDeleted { get; set; }
         public int? DeleterUserId { get; set; }
         public DateTime? DeletionTime { get; set; }
+        [Range(1, 4, ErrorMessage = MessageConstants.UserCreatiounUserTypeError)]
         public int UserType { get; set; }
+        public int VendorId { get; set; }
     }
 
 }

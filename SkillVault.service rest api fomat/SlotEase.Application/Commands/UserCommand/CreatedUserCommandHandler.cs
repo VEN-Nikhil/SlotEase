@@ -1,4 +1,6 @@
-﻿using SlotEase.Application.Interfaces.User;
+﻿using SlotEase.API.Constants.ApiResponse;
+using SlotEase.Application.Interfaces.User;
+using SlotEase.Domain.Entities.Driver;
 using SlotEase.Domain.Entities.Users;
 using SlotEase.Domain.Interfaces;
 using SlotEase.Infrastructure.Interfaces;
@@ -6,26 +8,27 @@ using System.Threading;
 
 namespace SlotEase.Application.Commands.UserCommand
 {
-    public class CreatedUserCommandHandler : IRequestHandler<CreatedUserCommand, bool>
+    public class CreatedUserCommandHandler : IRequestHandler<CreatedUserCommand, string>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUser _user;
         private readonly IRepository<User, long> _userRepository;
-        private readonly IRepository<UserDetails> _userRepository1;
+        private readonly IRepository<UserDetails> _userDetailsRepository;
+        private readonly IRepository<Driver> _driverRepository;
 
-        public CreatedUserCommandHandler(IUnitOfWork unitOfWork, IUser user, IRepository<User, long> userRepository, IRepository<UserDetails> userRepository1)
+        public CreatedUserCommandHandler(IUnitOfWork unitOfWork, IUser user, IRepository<User, long> userRepository, IRepository<UserDetails> userRepository1, IRepository<Driver> driverRepository)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _user = user ?? throw new ArgumentNullException(nameof(user));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _userRepository1 = userRepository1 ?? throw new ArgumentNullException(nameof(userRepository1));
+            _userDetailsRepository = userRepository1 ?? throw new ArgumentNullException(nameof(userRepository1));
+            _driverRepository = driverRepository ?? throw new ArgumentNullException(nameof(_driverRepository));
         }
 
-        public async Task<bool> Handle(CreatedUserCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreatedUserCommand request, CancellationToken cancellationToken)
         {
             long result = 0;
             var data = await CheckUserExists(request.UserCreateDto.Email);
-
 
             if (data == null)
             {
@@ -62,13 +65,37 @@ namespace SlotEase.Application.Commands.UserCommand
                         IsDeleted = false,
                     };
 
-                    _userRepository1.Insert(userDetails);
+                    if (request.UserCreateDto.UserType == 4 && !string.IsNullOrWhiteSpace(request.UserCreateDto.UserType.ToString()))
+                    {
+                        var driver = new Driver
+                        {
+                            DriverId = result,
+                            VendorId = request.UserCreateDto.VendorId,
+                            LastModificationTime = DateTime.UtcNow,
+                            CreationTime = DateTime.UtcNow,
+                            CreatorUserId = 0,
+                            IsDeleted = false,
+                        };
+
+                        // Insert or process the Driver object as needed
+                        await _driverRepository.InsertAsync(driver);
+                    }
+
+
+                    await _userDetailsRepository.InsertAsync(userDetails);
                 }
+            }
+            else
+            {
+                return MessageConstants.EmailAlreadyInUse;
+
             }
             _unitOfWork.SaveChanges();
 
-            return true;
+            return MessageConstants.UserCreatedSuccess;
+
         }
+
 
         private async Task<User> CheckUserExists(string email)
         {
@@ -78,7 +105,7 @@ namespace SlotEase.Application.Commands.UserCommand
 
         private async Task<UserDetails> CheckUserDetailsExists(long userId)
         {
-            return _userRepository1.GetAll().FirstOrDefault(x => x.Id == userId);
+            return _userDetailsRepository.GetAll().FirstOrDefault(x => x.Id == userId);
         }
 
     }

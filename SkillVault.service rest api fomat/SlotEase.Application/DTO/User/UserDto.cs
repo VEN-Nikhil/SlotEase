@@ -12,5 +12,6 @@
         public bool IsVerified { get; set; }
         public DateTime CreationTime { get; set; }
         public string phoneNumber { get; set; }
+        public int UserType { get; set; }
     }
 }
