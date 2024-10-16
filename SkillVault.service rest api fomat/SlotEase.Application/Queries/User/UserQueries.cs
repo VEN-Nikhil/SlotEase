@@ -89,3 +89,64 @@ namespace SlotEase.Application.Queries
 
     }
 }
+
+
+
+
+/*
+      _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        }
+
+        public async Task<List<UserDto>> GetUsersAsync(UserRequestDto userRequestDto)
+        {
+            try
+            {
+                var query = from user in _userRepository.GetAll(false)
+                            join userDetails in _userDetailsRepository.GetAll(false)
+                            on user.Id equals userDetails.userId
+                            where user.UserType == userRequestDto.UserType
+                            && (string.IsNullOrEmpty(userRequestDto.email) ||
+                                 user.Email.Contains(userRequestDto.email.Trim(), StringComparison.OrdinalIgnoreCase))
+                            select new UserDto
+                            {
+                                Id = user.Id,
+                                Email = user.Email,
+                                FirstName = user.FirstName,
+                                LastName = user.LastName,
+                                Gender = user.Gender,
+                                phoneNumber = userDetails.phoneNumber,
+                                IsActive = user.IsActive,
+                                IsVerified = user.IsVerified,
+                                CreationTime = user.CreationTime,
+                                LastSignIn = user.LastSignIn
+                            };
+
+                // Apply pagination directly on the IQueryable before execution
+                var paginatedUsers = await query
+                    .Skip((userRequestDto.pageNumber - 1) * userRequestDto.pageSize)
+                    .Take(userRequestDto.pageSize)
+                    .ToListAsync();
+
+                return paginatedUsers;
+            }
+            catch (Exception ex)
+            {
+                // Log the detailed exception message
+                var errorMessage = $"An error occurred while retrieving the users: {ex.Message}";
+
+                // If available, include inner exception details
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $" Inner Exception: {ex.InnerException.Message}";
+                }
+
+                // Optionally log the error to a logging framework or console
+                Console.WriteLine(errorMessage); // Replace with actual logging in production
+
+                throw new ApplicationException(errorMessage, ex);
+            }
+        }
+
+ 
+ 
+ */

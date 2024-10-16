@@ -5,8 +5,7 @@ namespace SlotEase.Application.DTO.PickupPoint
     public class PickupPointDto
     {
         public long Id { get; set; }
-        [Required(ErrorMessage = "Location name is required.")]
-        [StringLength(255, ErrorMessage = "Location name can't be longer than 255 characters.")]
+
         public string LocationName { get; set; } // Name of the location
 
         [Range(-90, 90, ErrorMessage = "Latitude must be between -90 and 90 degrees.")]

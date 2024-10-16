@@ -5,13 +5,7 @@ namespace SlotEase.Application.Interfaces
 {
     public interface IPickupPoint
     {
-
-
         Task<PickupPointDto> GetPickupPointByIdAsync(int id);
         Task<List<PickupPointDto>> GetAllPickupPoint(PickpPointRequestDto pickpPointRequest);
-
-
-
-
     }
 }
