@@ -56,6 +56,7 @@ namespace SlotEase.API.Controllers.Pickup
         [HttpPost]
         public async Task<IActionResult> CreatePickupPoint(PickupPointDto pickupPointDto)
         {
+
             var obj_Res = new CreatedPickupPointCommand(pickupPointDto);
             var result = await _mediator.Send(obj_Res);
             return Ok(result);

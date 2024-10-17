@@ -9,38 +9,38 @@ namespace SlotEase.Application.Commands.PickupPointCommand
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<PickupPoints, long> _pickupPointRepository;
+        private readonly IMapper _mapper;
 
-        public CreatedPickupPointCommandHandler(IUnitOfWork unitOfWork, IRepository<PickupPoints, long> pickupPointRepository)
+        public CreatedPickupPointCommandHandler(IUnitOfWork unitOfWork, IRepository<PickupPoints, long> pickupPointRepository, IMapper mapper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _pickupPointRepository = pickupPointRepository ?? throw new ArgumentNullException(nameof(pickupPointRepository));
+            _mapper = mapper;
         }
         public async Task<bool> Handle(CreatedPickupPointCommand request, CancellationToken cancellationToken)
         {
+
+            _unitOfWork.BeginTransaction();
+
             var data = _pickupPointRepository.GetAll().Where(x => request.PickupPointDto.LocationName.Contains(x.LocationName)).ToList();
             if (!data.Any())
             {
-                var pickupPoint = new PickupPoints
-                {
-                    LocationName = request.PickupPointDto.LocationName,
-                    Latitude = request.PickupPointDto.Latitude,
-                    Longitude = request.PickupPointDto.Longitude,
-                    LocationType = request.PickupPointDto.LocationType,
-                    PickupTime = request.PickupPointDto.PickupTime,
-                    DistanceFromOffice = request.PickupPointDto.DistanceFromOffice,
-                    LocationIcon = request.PickupPointDto.LocationIcon,
-                    IsActive = request.PickupPointDto.IsActive,
-                    IsVerified = request.PickupPointDto.IsVerified,
-                    CreatorUserId = 0,
-                    CreationTime = DateTime.UtcNow,
-                    LastModificationTime = DateTime.UtcNow,
-                };
-                _pickupPointRepository.Insert(pickupPoint);
+                PickupPoints pickupPoint = _mapper.Map<PickupPoints>(request.PickupPointDto);
+                pickupPoint.LocationName = request.PickupPointDto.LocationName;
+                pickupPoint.Latitude = request.PickupPointDto.Latitude;
+                pickupPoint.Longitude = request.PickupPointDto.Longitude;
+                pickupPoint.LocationType = request.PickupPointDto.LocationType;
+                pickupPoint.PickupTime = request.PickupPointDto.PickupTime;
+                pickupPoint.DistanceFromOffice = request.PickupPointDto.DistanceFromOffice;
+                pickupPoint.LocationIcon = request.PickupPointDto.LocationIcon;
+                pickupPoint.IsActive = request.PickupPointDto.IsActive;
+                pickupPoint.IsVerified = request.PickupPointDto.IsVerified;
+                pickupPoint.CreatorUserId = 0;
+                await _pickupPointRepository.InsertAsync(pickupPoint);
             }
-
             _unitOfWork.SaveChanges();
-
-            return await Task.FromResult(true);
+            _unitOfWork.CommitTransaction();
+            return (true);
         }
     }
 }
