@@ -1,5 +1,4 @@
-﻿
-using SlotEase.Application.DTO.User;
+﻿using SlotEase.Application.DTO.User;
 using SlotEase.Application.Interfaces.User;
 using SlotEase.Domain.Entities.Users;
 using SlotEase.Domain.Interfaces;
@@ -21,40 +20,51 @@ namespace SlotEase.Application.Queries
         {
             try
             {
-                var query = (from user in _userRepository.GetAll(false)
+                // Create the query as an IQueryable
+                var query = from user in _userRepository.GetAll(false)
+                            join userDetails in _userDetailsRepository.GetAll(false)
+                            on user.Id equals userDetails.userId
+                            where user.UserType == userRequestDto.UserType
+                            select new UserDto
+                            {
+                                Id = user.Id,
+                                Email = user.Email,
+                                FirstName = user.FirstName,
+                                LastName = user.LastName,
+                                Gender = user.Gender,
+                                phoneNumber = userDetails.phoneNumber,
+                                IsActive = user.IsActive,
+                                IsVerified = user.IsVerified,
+                                CreationTime = user.CreationTime,
+                                LastSignIn = user.LastSignIn,
+                                UserType = user.UserType,
+                            };
 
-                             where user.UserType == userRequestDto.UserType
-                             join userdetails in _userDetailsRepository.GetAll(false)
-                             on user.Id equals userdetails.userId
+                // Apply additional filtering based on email if provided
+                if (!string.IsNullOrEmpty(userRequestDto.email))
+                {
+                    var emailFilter = userRequestDto.email.ToLower().Trim();
+                    query = query.Where(userDto => userDto.Email.Trim().ToLower().Contains(emailFilter));
+                }
 
-                             where String.IsNullOrEmpty(userRequestDto.email) || user.Email.Trim().Contains(userRequestDto.email.ToLower().Trim())
-
-
-                             select new UserDto
-                             {
-                                 Id = user.Id,
-                                 Email = user.Email,
-                                 FirstName = user.FirstName,
-                                 LastName = user.LastName,
-                                 Gender = user.Gender,
-                                 phoneNumber = userdetails.phoneNumber,
-                                 IsActive = user.IsActive,
-                                 IsVerified = user.IsVerified,
-                                 CreationTime = user.CreationTime,
-                                 LastSignIn = user.LastSignIn,
-
-                             }).ToList();
-
-
-                return await Task.FromResult(query.Skip((userRequestDto.pageNumber - 1) * userRequestDto.pageSize)
-                                    .Take(userRequestDto.pageSize)
-                                    .ToList());
+                // Apply pagination directly on the IQueryable before execution
+                return await query
+                    .Skip((userRequestDto.pageNumber - 1) * userRequestDto.pageSize)
+                    .Take(userRequestDto.pageSize)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
+                // Optionally log the exception here
                 throw new ApplicationException("An error occurred while retrieving the users.", ex);
             }
         }
+
+
+
+
+
+
         public async Task<UserDto> GetSingleUserAsync(int id)
         {
             try
@@ -89,64 +99,3 @@ namespace SlotEase.Application.Queries
 
     }
 }
-
-
-
-
-/*
-      _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-        }
-
-        public async Task<List<UserDto>> GetUsersAsync(UserRequestDto userRequestDto)
-        {
-            try
-            {
-                var query = from user in _userRepository.GetAll(false)
-                            join userDetails in _userDetailsRepository.GetAll(false)
-                            on user.Id equals userDetails.userId
-                            where user.UserType == userRequestDto.UserType
-                            && (string.IsNullOrEmpty(userRequestDto.email) ||
-                                 user.Email.Contains(userRequestDto.email.Trim(), StringComparison.OrdinalIgnoreCase))
-                            select new UserDto
-                            {
-                                Id = user.Id,
-                                Email = user.Email,
-                                FirstName = user.FirstName,
-                                LastName = user.LastName,
-                                Gender = user.Gender,
-                                phoneNumber = userDetails.phoneNumber,
-                                IsActive = user.IsActive,
-                                IsVerified = user.IsVerified,
-                                CreationTime = user.CreationTime,
-                                LastSignIn = user.LastSignIn
-                            };
-
-                // Apply pagination directly on the IQueryable before execution
-                var paginatedUsers = await query
-                    .Skip((userRequestDto.pageNumber - 1) * userRequestDto.pageSize)
-                    .Take(userRequestDto.pageSize)
-                    .ToListAsync();
-
-                return paginatedUsers;
-            }
-            catch (Exception ex)
-            {
-                // Log the detailed exception message
-                var errorMessage = $"An error occurred while retrieving the users: {ex.Message}";
-
-                // If available, include inner exception details
-                if (ex.InnerException != null)
-                {
-                    errorMessage += $" Inner Exception: {ex.InnerException.Message}";
-                }
-
-                // Optionally log the error to a logging framework or console
-                Console.WriteLine(errorMessage); // Replace with actual logging in production
-
-                throw new ApplicationException(errorMessage, ex);
-            }
-        }
-
- 
- 
- */

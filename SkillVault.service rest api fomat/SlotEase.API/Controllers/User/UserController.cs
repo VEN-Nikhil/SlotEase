@@ -22,15 +22,10 @@ public class UserController(IUser userQueries, IMediator mediator) : ControllerB
     [Route("Users")]
     public async Task<IActionResult> GetUser(UserRequestDto userRequestDto)
     {
-        try
-        {
+        
             List<UserDto> users = await userQueries.GetUsersAsync(userRequestDto);
             return Ok(users);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, "An error occurred while retrieving the users.");
-        }
+         
     }
 
     [AllowAnonymous]
